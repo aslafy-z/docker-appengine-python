@@ -1,11 +1,11 @@
-FROM python:2.7
+FROM python:2.7-slim
 
 ENV PATH $PATH:/usr/local/google_appengine
 
 RUN \
   apt-get update \
   && apt-get autoremove -y \
-  && apt-get install unzip
+  && apt-get install -y gcc wget unzip
 
 ENV GAE_SDK_VERSION 1.9.22
 
