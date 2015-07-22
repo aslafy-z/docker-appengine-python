@@ -1,15 +1,22 @@
 FROM python:2.7-slim
 
-ENV PATH $PATH:/usr/local/google_appengine
+ENV PATH $PATH:/usr/local/google-cloud-sdk/bin
 
 RUN \
   apt-get update \
   && apt-get autoremove -y \
-  && apt-get install -y gcc wget unzip
-
-ENV GAE_SDK_VERSION 1.9.22
+  && apt-get install -y gcc wget
 
 RUN \
-  wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_${GAE_SDK_VERSION}.zip -P /tmp/ \
-  && unzip /tmp/google_appengine_${GAE_SDK_VERSION}.zip -d /usr/local/ \
-  && rm /tmp/google_appengine_${GAE_SDK_VERSION}.zip
+  wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz -P /tmp/ \
+  && tar -C /usr/local/ -xf /tmp/google-cloud-sdk.tar.gz \
+  && CLOUDSDK_CORE_DISABLE_PROMPTS=1 /usr/local/google-cloud-sdk/install.sh \
+       --usage-reporting false \
+       --path-update false \
+       --command-completion false \
+  && rm /tmp/google-cloud-sdk.tar.gz
+
+RUN CLOUDSDK_CORE_DISABLE_PROMPTS=1 gcloud components update \
+    app \
+    preview \
+    app-engine-python
