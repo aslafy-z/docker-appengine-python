@@ -1,15 +1,21 @@
-FROM python:2.7-slim
+FROM alpine:3.2
 
 ENV PATH $PATH:/usr/local/google-cloud-sdk/bin
 
 RUN \
-  apt-get update \
-  && apt-get autoremove -y \
-  && apt-get install -y gcc wget
+  apk add -U \
+    ca-certificates \
+    bash \
+    gcc \
+    wget \
+    python \
+    python-dev \
+    py-pip \
+    build-base
 
 RUN \
   wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz -P /tmp/ \
-  && tar -C /usr/local/ -xf /tmp/google-cloud-sdk.tar.gz \
+  && tar -C /usr/local/ -xzf /tmp/google-cloud-sdk.tar.gz \
   && CLOUDSDK_CORE_DISABLE_PROMPTS=1 /usr/local/google-cloud-sdk/install.sh \
        --usage-reporting false \
        --path-update false \
